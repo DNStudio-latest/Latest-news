@@ -6,9 +6,9 @@
 3. আসছে বছর আবার হবে! মায়ের গমন কার্নিভাল ২০২৬, আগরতলা, ত্রিপুরা | Durga Puja Carnival 2026 #Shorts
 
 ## YouTube description
-মায়ের গমন ২০২৬ — আগরতলার দুর্গাপূজা কার্নিভালে দশভূজা মায়ের শোভাযাত্রা, আর তার সামনে মা দুর্গার সাজে এক ছোট্ট মেয়ে। ঢাকের তালে, গানে-আনন্দে মাকে বিদায় জানাল আগরতলা। আসছে বছর আবার হবে!
+মায়ের গমন ২০২৬ — আগরতলার দুর্গাপূজা কার্নিভালে দশভূজা মায়ের শোভাযাত্রা, আর তার সামনে মা দুর্গার সাজে এক ছোট্ট মেয়ে। আলোয় সাজানো রাস্তায় নাচে-গানে মাতল জনতা, মোবাইলে বন্দি হল উৎসবের মুহূর্ত। আসছে বছর আবার হবে!
 
-Maayer Gomon 2026, the Durga Puja Carnival in Agartala, Tripura: a little girl dressed as Maa Durga leads the Pratima through the streets at night.
+Maayer Gomon 2026, the Durga Puja Carnival in Agartala, Tripura: a little girl dressed as Maa Durga rides before the Pratima through the lit-up streets at night, as the crowd dances and films every moment.
 
 ত্রিপুরা ও উত্তর-পূর্ব ভারতের সব খবরের জন্য সাবস্ক্রাইব করুন InsightNE।
 
