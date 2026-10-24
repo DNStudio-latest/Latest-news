@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.title }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ site.tagline }}{% endblock %}">
+  <link rel="stylesheet" href="{{ root }}static/style.css">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ root }}feed.xml">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <a class="brand" href="{{ root }}index.html">{{ site.title }}</a>
+      <p class="tagline">{{ site.tagline }}</p>
+    </div>
+    <nav class="wrap nav">
+      <a href="{{ root }}index.html">Top stories</a>
+      {% for c in categories %}<a href="{{ root }}category/{{ c|slug }}.html">{{ c }}</a>{% endfor %}
+    </nav>
+  </header>
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="wrap footer">
+    <p>Stories are written automatically from public reporting and social media, with links to every source.
+      Always check the original reports for full context.</p>
+    <p>&copy; {{ year }} {{ site.title }} · <a href="{{ root }}feed.xml">RSS</a></p>
+  </footer>
+</body>
+</html>

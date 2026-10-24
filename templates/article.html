@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ article.headline }} · {{ site.title }}{% endblock %}
+{% block description %}{{ article.summary }}{% endblock %}
+{% block head %}
+  <link rel="canonical" href="{{ site.base_url }}/article/{{ article.id }}.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{ article.headline }}">
+  <meta property="og:description" content="{{ article.summary }}">
+  <script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "NewsArticle",
+    "headline": article.headline, "description": article.summary,
+    "datePublished": article.published_at, "dateModified": article.updated_at,
+    "articleSection": article.category, "keywords": article.tags}|tojson }}</script>
+{% endblock %}
+{% block content %}
+  <article class="story">
+    <a class="kicker cat-{{ article.category|slug }}" href="{{ root }}category/{{ article.category|slug }}.html">{{ article.category }}</a>
+    <h1>{{ article.headline }}</h1>
+    <p class="standfirst">{{ article.summary }}</p>
+    <p class="meta">
+      Published {{ article.published_at|date }}{% if article.updated_at != article.published_at %} · Updated {{ article.updated_at|date }}{% endif %}
+      · {% if article.written_by == "ai" %}Written by our AI newsroom from {{ article.sources|length }} sources{% else %}Digest of {{ article.sources|length }} sources{% endif %}
+    </p>
+
+    {% if article.key_points %}
+      <ul class="key-points">{% for p in article.key_points %}<li>{{ p }}</li>{% endfor %}</ul>
+    {% endif %}
+
+    {% for p in article.body %}<p>{{ p }}</p>{% endfor %}
+
+    {% if article.tags %}
+      <p class="tags">{% for t in article.tags %}<span>#{{ t }}</span>{% endfor %}</p>
+    {% endif %}
+
+    <section class="sources">
+      <h2>Sources</h2>
+      <ol>
+        {% for s in article.sources %}
+          <li><a href="{{ s.url }}" rel="nofollow noopener" target="_blank">{{ s.title }}</a>
+            <span class="src">{{ s.source }}{% if s.platform not in ["rss", "google_news", "hackernews"] %} · {{ s.platform }}{% endif %}</span></li>
+        {% endfor %}
+      </ol>
+    </section>
+  </article>
+
+  {% if related %}
+    <aside class="related">
+      <h2>More in {{ article.category }}</h2>
+      <ul>{% for r in related %}<li><a href="{{ r.id }}.html">{{ r.headline }}</a></li>{% endfor %}</ul>
+    </aside>
+  {% endif %}
+{% endblock %}

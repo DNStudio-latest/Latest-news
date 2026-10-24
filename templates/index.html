@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{% if heading %}{{ heading }} · {% endif %}{{ site.title }}{% endblock %}
+{% block content %}
+  <h1 class="section-title">{{ heading or "Top stories" }}</h1>
+  {% if not articles %}
+    <p class="empty">No stories yet — the newsroom bot will publish the first ones on its next run.</p>
+  {% endif %}
+  <div class="grid">
+    {% for a in articles %}
+      <article class="card{% if loop.first and not heading %} lead{% endif %}">
+        <a class="kicker cat-{{ a.category|slug }}" href="{{ root }}category/{{ a.category|slug }}.html">{{ a.category }}</a>
+        <h2><a href="{{ root }}article/{{ a.id }}.html">{{ a.headline }}</a></h2>
+        <p>{{ a.summary }}</p>
+        <p class="meta">{{ a.updated_at|date }} · {{ a.sources|length }} sources{% if a.updated_at != a.published_at %} · Updated{% endif %}</p>
+      </article>
+    {% endfor %}
+  </div>
+{% endblock %}
