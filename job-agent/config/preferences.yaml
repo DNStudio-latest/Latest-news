@@ -1,0 +1,40 @@
+# Your priorities. Edit freely. Order = priority (first gets most points).
+role_categories:
+  - name: academic
+    weight: 1.0
+    title_keywords: [assistant professor, guest faculty, guest lecturer, research fellow, research associate,
+                     junior research fellow, senior research fellow, jrf, srf, faculty, lecturer, post-doctoral, postdoctoral]
+    field_keywords: [journalism, mass communication, media studies, mass comm, jmc, mcj, communication, media]
+  - name: journalism
+    weight: 0.95
+    title_keywords: [reporter, sub-editor, sub editor, copy editor, content editor, news editor, digital editor,
+                     correspondent, journalist, stringer, editor]
+  - name: video
+    weight: 0.85
+    title_keywords: [video journalist, video editor, content creator, youtube producer, video producer, videographer]
+  - name: freelance
+    weight: 0.75
+    title_keywords: [freelance, news writing, content writer, content writing, video editing, youtube script,
+                     scriptwriter, documentary, travel video]
+  - name: communication
+    weight: 0.7
+    title_keywords: [public relations, pr officer, communication officer, communications officer, communication manager,
+                     communications associate, media officer, information officer, outreach]
+    field_keywords: [climate, environment, development, ngo, sustainability, conservation, social]
+  - name: fellowship
+    weight: 0.8
+    title_keywords: [fellowship, grant, media fellowship, reporting grant]
+    field_keywords: [climate, environment, journalism, media, research]
+
+locations:
+  first: [tripura, agartala, suryamaninagar, udaipur tripura, dharmanagar, kailashahar]
+  northeast: [assam, guwahati, silchar, tezpur, dibrugarh, meghalaya, shillong, manipur, imphal, mizoram, aizawl,
+              nagaland, kohima, dimapur, arunachal, itanagar, sikkim, gangtok, northeast, north east, north-east]
+  india: [india, delhi, new delhi, kolkata, mumbai, bengaluru, bangalore, chennai, hyderabad, pune, noida,
+          gurugram, bhubaneswar, patna, lucknow, jaipur, nationwide, pan india]
+  remote_ok: true
+
+salary_notes: "Not set. Add your minimum if you want it used."
+deal_breakers:
+  - fee to apply on a non-official site
+  - unpaid work presented as a job (except fellowships/internships you choose)

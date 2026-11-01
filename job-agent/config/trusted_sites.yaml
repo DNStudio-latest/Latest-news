@@ -1,0 +1,25 @@
+# Sites where the agent MAY submit (after you approve each item AND type "yes" at the final prompt).
+#
+# An entry only counts when status is "approved". "pending" means: not yet confirmed by you.
+# The agent will never change a status itself.
+#
+# method:
+#   email   - the agent writes the email with attachments, shows you a preview, and sends only after "yes".
+#             SMTP login is read from environment variables (SMTP_HOST, SMTP_PORT, SMTP_USER) and the
+#             password is typed by you at runtime. Nothing is saved.
+#   form    - the agent fills the public web form in a browser, stops BEFORE the final Submit button,
+#             shows you a preview, and clicks Submit only after "yes". Not used if the form needs a login.
+#   manual  - the agent prepares everything; you submit yourself. (Safest default.)
+#
+# To add a site: copy an entry, set domain + method, and set status: approved yourself.
+sites:
+  - domain: tripurauniv.ac.in
+    # Email or the official application only. No automatic form submission unless you confirm the method.
+    method: email
+    status: pending          # change to "approved" yourself after checking
+    note: "Guest faculty notices usually ask for an emailed application. Confirm the address on each notice."
+  - domain: nenow.in
+    # Careers posts on Northeast Now usually ask for CV + cover letter by email.
+    method: email
+    status: pending
+    note: "Apply only via an email address shown on the nenow.in post. Never WhatsApp-only."

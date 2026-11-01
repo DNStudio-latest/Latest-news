@@ -1,0 +1,91 @@
+# Source list. URLs marked "check" could not be opened from the build machine (network blocked),
+# so please confirm them in a browser once. The agent will log and skip any URL that fails.
+search_queries:
+  - Tripura University JMC faculty 2026
+  - assistant professor journalism mass communication Northeast 2026
+  - guest faculty journalism 2026 Tripura
+  - Tripura journalist vacancy 2026
+  - Northeast news reporter jobs 2026
+  - DD News Agartala empanelment 2026
+  - video journalist jobs India 2026
+  - content editor digital news India 2026
+  - freelance video editor India 2026
+  - climate journalism fellowship 2026 India
+  - environment communication jobs Northeast 2026
+  - research fellowship media studies PhD India 2026
+
+official:
+  tripura_university:
+    employer: Tripura University
+    location: Suryamaninagar, Agartala, Tripura
+    start_urls: [https://tripurauniv.ac.in/]          # notices found under tripurauniv.ac.in/site/... (check)
+  nit_agartala:
+    employer: NIT Agartala
+    location: Agartala, Tripura
+    start_urls: [https://www.nita.ac.in/]             # check
+  nehu:
+    employer: North-Eastern Hill University (NEHU)
+    location: Shillong, Meghalaya
+    start_urls: [https://nehu.ac.in/]                 # check
+  icfai_tripura:
+    employer: ICFAI University Tripura
+    location: Agartala, Tripura
+    start_urls: [https://www.iutripura.edu.in/]       # check
+  techno_india_tripura:
+    employer: Techno India University Tripura
+    location: Agartala, Tripura
+    start_urls: []                                    # URL not known: please add
+  sister_nivedita:
+    employer: Sister Nivedita University
+    location: Kolkata, India
+    start_urls: [https://snuniv.ac.in/]               # check
+  northeast_universities:
+    employer: null                                    # taken from each entry below
+    entries:
+      - {employer: Assam University, location: "Silchar, Assam", url: "https://www.aus.ac.in/"}
+      - {employer: Tezpur University, location: "Tezpur, Assam", url: "https://www.tezu.ernet.in/"}
+      - {employer: Gauhati University, location: "Guwahati, Assam", url: "https://gauhati.ac.in/"}
+      - {employer: Dibrugarh University, location: "Dibrugarh, Assam", url: "https://dibru.ac.in/"}
+      - {employer: Mizoram University, location: "Aizawl, Mizoram", url: "https://mzu.edu.in/"}
+      - {employer: Manipur University, location: "Imphal, Manipur", url: "https://www.manipuruniv.ac.in/"}
+      - {employer: Nagaland University, location: "Kohima, Nagaland", url: "https://nagalanduniversity.ac.in/"}
+      - {employer: Rajiv Gandhi University, location: "Itanagar, Arunachal Pradesh", url: "https://rgu.ac.in/"}
+      - {employer: Sikkim University, location: "Gangtok, Sikkim", url: "https://cus.ac.in/"}
+      - {employer: "IIMC Aizawl", location: "Aizawl, Mizoram", url: "https://iimc.gov.in/"}
+  prasar_bharati:
+    employer: Prasar Bharati (DD News / All India Radio)
+    location: India (includes DD/AIR Agartala)
+    start_urls: [https://prasarbharati.gov.in/pbvacancies/]   # check
+  pib:
+    employer: Press Information Bureau
+    location: India
+    start_urls: [https://pib.gov.in/]                 # check
+  tripura_ica:
+    employer: Information & Cultural Affairs Dept, Govt of Tripura
+    location: Agartala, Tripura
+    start_urls: [https://ica.tripura.gov.in/]         # check
+
+media:
+  nenow:
+    employer: Northeast Now
+    location: Guwahati, Assam
+    start_urls: [https://nenow.in/assam-career]       # career posts live under /assam-career/
+    own_posts_only: true                              # keep only Northeast Now's OWN vacancies
+  national_media:
+    entries: []                                       # add careers pages you trust, e.g. {employer: X, location: India, url: https://...}
+
+boards:            # search only, never log in
+  naukri: {base: "https://www.naukri.com/{slug}-jobs"}
+  indeed: {base: "https://in.indeed.com/jobs?q={q}&l=India"}
+  linkedin: {base: "https://www.linkedin.com/jobs/search?keywords={q}&location=India"}
+  mysarkarinaukri: {base: "https://www.mysarkarinaukri.com/?s={q}"}
+
+freelance:         # public listings only; no login, no automatic bids
+  internshala: {base: "https://internshala.com/jobs/keywords-{slug}/"}
+  upwork: {base: "https://www.upwork.com/nx/search/jobs/?q={q}"}
+  fiverr: {base: "https://www.fiverr.com/search/gigs?query={q}"}
+
+fellowships:
+  pages:
+    - {employer: Earth Journalism Network, url: "https://earthjournalism.net/opportunities"}
+    - {employer: fundsforNGOs (aggregator), url: "https://fundsforindividuals.fundsforngos.org/category/fellowships/"}

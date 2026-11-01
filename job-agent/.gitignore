@@ -1,0 +1,8 @@
+# Personal data: this repository is PUBLIC. Keep these on your own computer only.
+cv/cv.md
+config/profile.yaml
+data/*.csv
+output/
+logs/
+__pycache__/
+.pytest_cache/

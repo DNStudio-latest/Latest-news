@@ -1,0 +1,13 @@
+# Fit score out of 100.
+weights:
+  role_match: 40
+  location_match: 15        # Tripura 100%, Northeast 80%, India 65%, remote 60%
+  eligibility: 25           # met 100%, unclear 50%, not met 0% (and excluded)
+  deadline_open: 10         # >= deadline_min_days full, fewer days 30%, rolling 70%, unknown 50%
+  source_reliability: 10    # official site full, aggregator only = aggregator_factor
+deadline_min_days: 5
+aggregator_factor: 0.5
+labels:
+  strong: 80
+  good: 60                  # below this = Weak: kept in data, not queued
+queue_requires_verified: true

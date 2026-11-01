@@ -1,0 +1,20 @@
+{
+  "id": "demo000001",
+  "title": "DEMO - Guest Faculty, Journalism and Mass Communication",
+  "employer": "DEMO University",
+  "department": "Journalism and Mass Communication",
+  "location": "Agartala, Tripura",
+  "type": "guest faculty",
+  "category": "academic",
+  "deadline": "2099-12-31",
+  "deadline_raw": "Last date: 31.12.2099",
+  "eligibility": "Master's degree with 55% marks in Journalism and Mass Communication and UGC NET as per UGC Regulations 2018. Send CV, photograph and mark sheets.",
+  "how_to_apply": "Email to demo@example.org",
+  "link": "https://example.org/demo",
+  "official_link": "https://example.org/demo",
+  "source": "demo",
+  "is_official": true,
+  "verification": "VERIFIED",
+  "score": 95,
+  "label": "Strong"
+}
