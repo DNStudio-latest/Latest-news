@@ -99,7 +99,7 @@ def write_queue_readme(by_id):
         needs = ""
         try:
             import json
-            j = json.loads((f / "item.json").read_text())
+            j = json.loads((f / "item.json").read_text(encoding="utf-8"))
             needs = "; ".join(j.get("missing", []) + j.get("needs", []))
         except Exception:
             pass

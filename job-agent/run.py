@@ -69,9 +69,9 @@ def cmd_demo(a):
     import json
     from lib import config
     from writer import package
-    it = json.loads((paths.ROOT / "tests" / "fixtures" / "sample_item.json").read_text())
+    it = json.loads((paths.ROOT / "tests" / "fixtures" / "sample_item.json").read_text(encoding="utf-8"))
     folder, status, missing = package.prepare(it, config.profile(), base=paths.OUTPUT / "demo")
-    (folder / "DEMO_NOT_A_REAL_JOB.txt").write_text("This package was built from a made-up test item to show the format.\n")
+    (folder / "DEMO_NOT_A_REAL_JOB.txt").write_text("This package was built from a made-up test item to show the format.\n", encoding="utf-8")
     print(f"DEMO package (made-up job, for format only): {folder}\nStatus: {status}" + (f"\nMissing: {missing}" if missing else ""))
 
 

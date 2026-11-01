@@ -41,14 +41,14 @@ def test_pipeline_end_to_end_with_snapshot(home, no_net):
          "eligibility": "Master's in JMC and NET", "official_link": "https://tripurauniv.ac.in/b.pdf", "is_official": True},
     ]}
     paths.SNAPSHOTS.mkdir(parents=True, exist_ok=True)
-    (paths.SNAPSHOTS / "t.json").write_text(json.dumps(snap))
+    (paths.SNAPSHOTS / "t.json").write_text(json.dumps(snap), encoding="utf-8")
     rep, summary = pipeline.run(use_network=False, today=date(2026, 11, 1), fetcher=no_net, out=lambda s: None)
     st = {i["title"]: i["status"] for i in store.load_opportunities().values()}
     assert st["Guest Faculty in Journalism and Mass Communication"] == "EXPIRED"
     assert st["Reporter"] == "SUSPECTED SCAM"
     assert st["Guest Faculty in Mass Communication"] == "UNVERIFIED"     # never queued without verification
     assert not any(paths.QUEUE.glob("*/item.json"))
-    assert summary.exists() and "Suspected scams" in summary.read_text()
+    assert summary.exists() and "Suspected scams" in summary.read_text(encoding="utf-8")
 
 
 def test_source_failure_does_not_stop_run(home, no_net):
@@ -65,7 +65,7 @@ def test_verified_item_gets_queued(home):
                        "location": "Agartala, Tripura", "deadline": "2026-12-01", "source": "tripura_university",
                        "eligibility": "Master's in JMC and NET", "official_link": "https://tripurauniv.ac.in/b",
                        "is_official": True}]}
-    (paths.SNAPSHOTS / "t.json").write_text(json.dumps(snap))
+    (paths.SNAPSHOTS / "t.json").write_text(json.dumps(snap), encoding="utf-8")
     rep, _ = pipeline.run(use_network=True, source_names=["tripura_university"], today=date(2026, 11, 1),
                           fetcher=FakeFetcher({"https://tripurauniv.ac.in/b": page}), out=lambda s: None)
     queued = list(paths.QUEUE.glob("*/item.json"))

@@ -78,6 +78,14 @@ class CV:
         return None
 
 
+def drop_placeholder_lines(md):
+    """Safety net: a generated line that still holds a [placeholder] is removed, never sent."""
+    keep, dropped = [], []
+    for l in md.splitlines():
+        (dropped if PLACEHOLDER.search(re.sub(r"\[(NEEDS YOUR INPUT| |x|X)\]", "", l)) else keep).append(l)
+    return "\n".join(keep) + "\n", dropped
+
+
 def display_dates(d):
     """'[Start month and year] – Present' -> 'Present'; 'May 2021 – [End...]' -> 'From May 2021'."""
     if not d:
@@ -115,8 +123,10 @@ def check_text(text, cv_text, allowed_extra=""):
     problems = []
     # headings and "_Source: CV line N_" lines are structure, not claims (sources are checked by check_traces)
     text = "\n".join(l for l in text.splitlines() if not l.startswith("#") and not l.startswith("_Source"))
-    if PLACEHOLDER.search(re.sub(r"\[(NEEDS YOUR INPUT|x|X| )\]|\[[ xX]\]", "", text)):
-        problems.append("placeholder text left in document")
+    for l in text.splitlines():
+        m = PLACEHOLDER.search(re.sub(r"\[(NEEDS YOUR INPUT|x|X| )\]", "", l))
+        if m:
+            problems.append(f"placeholder text left in document: {l.strip()[:120]!r}")
     hay = (cv_text + " " + (allowed_extra or "")).lower()
     for tok in set(TOKEN.findall(text)):
         t = tok.strip(".,%+’'").lower()

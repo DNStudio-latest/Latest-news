@@ -25,21 +25,21 @@ def _strings(o):
 
 def test_profile_values_all_in_cv(home):
     cv = read_cv()
-    prof = yaml.safe_load((home / "config" / "profile.yaml").read_text())
+    prof = yaml.safe_load((home / "config" / "profile.yaml").read_text(encoding="utf-8"))
     for s in _strings(prof):
         assert s in cv, f"profile value not in CV: {s!r}"
     for src in prof["eligibility_facts"]["derived_from"].values():
         assert src in cv
 
 
-def test_placeholders_found(home):
-    ph = placeholders(read_cv())
-    texts = " ".join(p["placeholder"] for p in ph)
-    assert "[20+]" in texts and "[Percentage / Division]" in texts and len(ph) >= 15
+def test_placeholders_found():
+    ph = placeholders("published [20+] stories\nBA | [2013-2016] | [Percentage / Division]\nno placeholder here")
+    assert [p["placeholder"] for p in ph] == ["[20+]", "[2013-2016]", "[Percentage / Division]"]
+    assert [p["line"] for p in ph] == [1, 2, 2]
 
 
 def test_missing_fields_file_lists_every_placeholder_line(home):
-    md = (home / "config" / "missing_fields.md").read_text().lower()
+    md = (home / "config" / "missing_fields.md").read_text(encoding="utf-8").lower()
     for key in ("20+", "start month", "subscriber", "end month", "year of enrolment", "percentage", "software", "level"):
         assert key in md
 
@@ -53,16 +53,16 @@ def test_no_placeholder_facts_used(profile, home):
 
 def test_generated_package_passes_fact_check(profile, home):
     for cat in ("academic", "journalism", "video", "freelance", "communication", "fellowship"):
-        item = json.loads(FIX.read_text())
+        item = json.loads(FIX.read_text(encoding="utf-8"))
         item["category"], item["id"] = cat, f"t-{cat}"
         folder, status, problems = package.prepare(item, profile)
         assert not [p for p in problems if "not in the CV" in p or "trace" in p or "placeholder" in p], (cat, problems)
         for name in ("tailored_cv.md", "cover_letter.md", "form_answers.md", "checklist.md", "item.json", "tailored_cv.pdf"):
             assert (folder / name).exists()
-        letter = (folder / "cover_letter.md").read_text()
+        letter = (folder / "cover_letter.md").read_text(encoding="utf-8")
         assert len(letter.split()) <= 250
-        assert "[" not in (folder / "tailored_cv.md").read_text()
-        assert json.loads((folder / "item.json").read_text())["cv_pages"] <= 2
+        assert "[" not in (folder / "tailored_cv.md").read_text(encoding="utf-8")
+        assert json.loads((folder / "item.json").read_text(encoding="utf-8"))["cv_pages"] <= 2
 
 
 def test_checker_catches_invented_claims(home):
@@ -73,16 +73,16 @@ def test_checker_catches_invented_claims(home):
 
 
 def test_missing_required_fact_blocks_item(profile, home):
-    item = json.loads(FIX.read_text())
+    item = json.loads(FIX.read_text(encoding="utf-8"))
     item["eligibility"] += " Candidates must give date of birth and category."
     _, status, missing = package.prepare(item, profile)
     assert status == "BLOCKED" and "Date of birth" in missing
 
 
 def test_every_form_answer_has_a_source_line(profile, home):
-    item = json.loads(FIX.read_text())
+    item = json.loads(FIX.read_text(encoding="utf-8"))
     folder, _, _ = package.prepare(item, profile)
-    md = (folder / "form_answers.md").read_text()
+    md = (folder / "form_answers.md").read_text(encoding="utf-8")
     blocks = re.split(r"\n## ", md)[1:]
     cv = read_cv()
     for b in blocks:

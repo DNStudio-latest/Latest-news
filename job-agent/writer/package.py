@@ -2,8 +2,8 @@
 import json
 import re
 
-from lib import paths
-from .cv_facts import CV, check_text, check_traces, read_cv
+from lib import log, paths
+from .cv_facts import CV, check_text, check_traces, drop_placeholder_lines, read_cv
 from . import tailor
 from .export import md_to_pdf
 
@@ -25,6 +25,9 @@ def prepare(item, profile, base=None):
     extra = " ".join(str(item.get(k) or "") for k in ("title", "employer", "location", "department"))
 
     cv_md, t1 = tailor.tailored_cv(item, cv, profile)
+    cv_md, dropped = drop_placeholder_lines(cv_md)
+    if dropped:
+        log.get("writer").warning("dropped lines with placeholders from tailored CV: %s", dropped)
     letter, t2 = tailor.cover_letter(item, cv, profile)
     answers, t3, needs = tailor.form_answers(item, cv, profile)
     problems = []

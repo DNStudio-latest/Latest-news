@@ -15,7 +15,7 @@ PAGE = "<html><body>Guest faculty. Eligibility: Master's in JMC and NET. Last da
 
 
 def setup_item(profile, trusted_status="approved", confirm_profile=True):
-    item = json.loads(FIX.read_text())
+    item = json.loads(FIX.read_text(encoding="utf-8"))
     item["eligibility"] = "Master's in JMC and NET. Send CV."
     from matcher.verify import fingerprint
     item["page_fingerprint"] = fingerprint(PAGE)[0]
@@ -24,11 +24,11 @@ def setup_item(profile, trusted_status="approved", confirm_profile=True):
     store.init_files()
     store.save_opportunities({item["id"]: item})
     t = {"sites": [{"domain": "example.org", "method": "email", "status": trusted_status}]}
-    paths.TRUSTED.write_text(yaml.safe_dump(t))
+    paths.TRUSTED.write_text(yaml.safe_dump(t), encoding="utf-8")
     if confirm_profile:
-        p = yaml.safe_load(paths.PROFILE.read_text())
+        p = yaml.safe_load(paths.PROFILE.read_text(encoding="utf-8"))
         p["confirmed_by_user"] = True
-        paths.PROFILE.write_text(yaml.safe_dump(p, allow_unicode=True))
+        paths.PROFILE.write_text(yaml.safe_dump(p, allow_unicode=True), encoding="utf-8")
     return item
 
 
@@ -85,7 +85,7 @@ def test_pending_trusted_site_refused(home, profile):
 
 def test_untrusted_site_refused(home, profile):
     item = setup_item(profile)
-    paths.TRUSTED.write_text("sites: []\n")
+    paths.TRUSTED.write_text("sites: []\n", encoding="utf-8")
     store.record_approval(item["id"], item["title"], "approve")
     _, sender, said = run_submit()
     assert not sender.sent and "not in config/trusted_sites.yaml" in said
