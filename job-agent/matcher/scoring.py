@@ -5,9 +5,17 @@ from datetime import date
 from . import dates, eligibility, scam
 
 
+def _is_vacancy(title):
+    from sources.base import is_vacancy
+    return is_vacancy(title)
+
+
 def _kw_hit(text, words):
     low = (text or "").lower()
     return any(w.lower() in low for w in words)
+
+
+OTHER_DEPT = re.compile(r"(?:department|dept\.?|school|centre|center)\s+of\s+([A-Za-z &,]+)", re.I)
 
 
 def role_points(item, prefs, weight):
@@ -17,8 +25,19 @@ def role_points(item, prefs, weight):
     cats = prefs["role_categories"]
     for i, c in enumerate(cats):
         if _kw_hit(title, c["title_keywords"]):
-            field_ok = not c.get("field_keywords") or _kw_hit(f"{title} {item.get('eligibility','')}", c["field_keywords"])
-            factor = c.get("weight", 1.0) * (1.0 if field_ok else 0.5)
+            if c.get("field_keywords"):
+                head = f"{item.get('title','')} {item.get('department','')}"
+                if _kw_hit(head, c["field_keywords"]):
+                    factor_field = 1.0
+                elif OTHER_DEPT.search(head):
+                    factor_field = 0.0      # names another department, e.g. "Department of Chemical Sciences"
+                elif c["name"] == "academic":
+                    factor_field = 0.5 if _kw_hit(item.get("eligibility", ""), c["field_keywords"]) else 0.25
+                else:
+                    factor_field = 0.5
+            else:
+                factor_field = 1.0
+            factor = c.get("weight", 1.0) * factor_field
             if factor * weight > best:
                 best, cat = factor * weight, c["name"]
     return round(best, 1), cat
@@ -44,6 +63,8 @@ def deadline_points(item, weight, min_days, today):
         left = dates.days_left(d, today)
         if left < 0:
             return 0, "expired"
+        if not dates.plausible(dates.datetime.strptime(d[:10], "%Y-%m-%d").date(), today):
+            return round(weight * 0.5, 1), "deadline looks wrong (too far ahead)"
         return (weight, f"{left} days left") if left >= min_days else (round(weight * 0.3, 1), f"only {left} days left")
     parsed, kind = dates.parse_deadline(item.get("deadline_raw") or "")
     if kind == "rolling":
@@ -58,6 +79,8 @@ def evaluate(item, profile, prefs, cfg, today=None):
     flags, notes = [], []
 
     # deadline normalisation
+    if item.get("deadline") and not dates.plausible(dates.datetime.strptime(item["deadline"][:10], "%Y-%m-%d").date(), today):
+        item["deadline"] = ""      # misread number from an earlier run
     if not item.get("deadline") and item.get("deadline_raw"):
         d, kind = dates.parse_deadline(item["deadline_raw"])
         if d:
@@ -92,6 +115,9 @@ def evaluate(item, profile, prefs, cfg, today=None):
     elif loc_tier == "outside preferences":
         status = "EXCLUDED"
         flags.append("location outside preferences and no remote option")
+    elif not _is_vacancy(item.get("title", "")):
+        status = "EXCLUDED"
+        flags.append("not a vacancy (list, result, interview schedule, admission, tender...)")
     elif rp == 0:
         status = "EXCLUDED"
         flags.append("role does not match preferences")

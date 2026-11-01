@@ -11,12 +11,16 @@ from writer import package
 from tests.conftest import FakeFetcher
 
 FIX = Path(__file__).parent / "fixtures" / "sample_item.json"
-PAGE = "<html><body>Guest faculty. Eligibility: Master's in JMC and NET. Last date 31.12.2099. Apply by email to demo@example.org</body></html>"
+from datetime import timedelta
+DEADLINE = date.today() + timedelta(days=60)
+PAGE = (f"<html><body>Guest faculty. Eligibility: Master's in JMC and NET. Last date {DEADLINE:%d.%m.%Y}. "
+        "Apply by email to demo@example.org</body></html>")
 
 
 def setup_item(profile, trusted_status="approved", confirm_profile=True):
     item = json.loads(FIX.read_text(encoding="utf-8"))
     item["eligibility"] = "Master's in JMC and NET. Send CV."
+    item["deadline"] = DEADLINE.isoformat()
     from matcher.verify import fingerprint
     item["page_fingerprint"] = fingerprint(PAGE)[0]
     folder, status, _ = package.prepare(item, profile)
@@ -102,7 +106,7 @@ def test_expired_refused(home, profile):
     item = setup_item(profile)
     store.record_approval(item["id"], item["title"], "approve")
     item = store.load_opportunities()[item["id"]]
-    assert "deadline passed (2099-12-31)" in gate.check(item, today=date(2100, 1, 1))
+    assert f"deadline passed ({DEADLINE.isoformat()})" in gate.check(item, today=DEADLINE + timedelta(days=1))
 
 
 def test_answer_no_does_not_send(home, profile):
@@ -130,7 +134,7 @@ def test_page_change_stops(home, profile):
     item = setup_item(profile)
     store.record_approval(item["id"], item["title"], "approve")
     sender, said = Sender(), []
-    changed = PAGE.replace("31.12.2099", "15.12.2099")
+    changed = PAGE.replace(f"{DEADLINE:%d.%m.%Y}", f"{DEADLINE - timedelta(days=10):%d.%m.%Y}")
     submit.submit_all(ask=lambda q: "yes", out=said.append, interactive=True,
                       fetcher=FakeFetcher({"https://example.org/demo": changed}), sender=sender)
     assert not sender.sent and any("STOPPED" in s for s in said)

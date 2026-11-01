@@ -70,3 +70,35 @@ def test_verified_item_gets_queued(home):
                           fetcher=FakeFetcher({"https://tripurauniv.ac.in/b": page}), out=lambda s: None)
     queued = list(paths.QUEUE.glob("*/item.json"))
     assert len(queued) == 1 and (paths.QUEUE / "README.md").exists()
+
+
+def test_real_world_false_positives_are_dropped(profile, cfgs):
+    """Cases from the first live run (Tezpur University / NEHU pages)."""
+    from matcher import scoring
+    from sources.base import is_vacancy
+    for t in ("Seniority list of Professors of NEHU, Shillong Campus",
+              "Seniority List of Assistant Professors of North-Eastern Hill University",
+              "Interview Notice for Faculty positions, Department of Chemical Sciences",
+              "Interview for Faculty Positions under the Department of Education",
+              "Result of Ph.D. entrance", "List of candidates selected for provisional admission"):
+        assert not is_vacancy(t), t
+    assert is_vacancy("Walk-in interview for Guest Faculty in Mass Communication")
+    assert is_vacancy("Advertisement for Assistant Professor, Department of Mass Communication and Journalism")
+    r = scoring.evaluate({"title": "Recruitment of Assistant Professor, Department of Chemical Sciences",
+                          "employer": "Tezpur University", "location": "Tezpur, Assam", "deadline": "2026-11-30",
+                          "eligibility": "", "is_official": True}, profile, *cfgs, today=date(2026, 11, 1))
+    assert r["status"] == "EXCLUDED"
+
+
+def test_far_future_dates_are_ignored():
+    from matcher.dates import parse_deadline
+    assert parse_deadline("notice_26.03.35.pdf", today=date(2026, 11, 1)) == (None, "unknown")
+    assert parse_deadline("Last date 01.04.2086", today=date(2026, 11, 1)) == (None, "unknown")
+    assert parse_deadline("file 1757353300 dated 19.12.2099 last date 20.11.2026", today=date(2026, 11, 1))[0] == date(2026, 11, 20)
+
+
+def test_context_is_the_row_not_the_whole_page():
+    big = "<div>" + "Department of Mass Communication news. " * 40 + \
+          '<a href="/x.pdf">Advertisement for Assistant Professor, Department of Education</a></div>'
+    items = extract_notices(big, "https://tezu.ernet.in/", "Tezpur University", "Tezpur, Assam", "ne", True)
+    assert items and "Mass Communication" not in items[0]["eligibility"]

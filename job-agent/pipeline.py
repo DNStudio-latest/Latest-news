@@ -79,11 +79,21 @@ def run(source_names=None, use_network=True, use_snapshots=True, today=None, fet
             it["verification"] = "UNVERIFIED"
         it["updated_at"] = store.now_iso()
     store.save_opportunities(existing)
+    _clean_queue(existing)
 
     write_queue_readme(existing)
     write_results(existing)
     path = write_summary(report, existing, today)
     return report, path
+
+
+def _clean_queue(by_id):
+    import shutil
+    decided = store.latest_decisions()
+    keep = {i["id"] for i in _active(by_id)} | set(decided)
+    for f in paths.QUEUE.glob("*-*"):
+        if f.is_dir() and f.name.split("-", 1)[0] not in keep:
+            shutil.rmtree(f, ignore_errors=True)
 
 
 def _active(by_id):

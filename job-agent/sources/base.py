@@ -18,6 +18,21 @@ NOTICE_WORDS = re.compile(
     r"fellowship|empanel|engagement\s+of|post\s+of|positions?\b|hiring|career|\bjobs?\b|"
     r"reporter|editor|correspondent|journalist|video|content|professor|lecturer|communication", re.I)
 NAV_WORDS = re.compile(r"^(home|about|contact|login|sign in|register|careers?|jobs?|recruitments?|more|read more|click here|download|apply|view)$", re.I)
+NOT_A_VACANCY = re.compile(
+    r"seniority\s+list|result|shortlist|short-list|list\s+of\s+(selected|eligible|candidates|shortlisted)|"
+    r"selected\s+candidates|merit\s+list|admission|admit\s+card|answer\s+key|syllabus|tender|quotation|"
+    r"minutes\s+of|corrigendum.*admission|cancell?ation|postpone|time\s*table|exam(ination)?\s+schedule|"
+    r"interview\s+(schedule|notice|for)|schedule\s+of\s+interview|provisional\s+admission|fee\s+structure|"
+    r"convocation|holiday|circular|office\s+order|appointment\s+order|joining\s+report", re.I)
+WALK_IN = re.compile(r"walk[- ]?in", re.I)
+
+
+def is_vacancy(title):
+    """False for lists, results, interview schedules for shortlisted people, admissions, tenders, etc.
+    A 'walk-in interview' IS a vacancy (anyone eligible can attend), so it is kept."""
+    return bool(WALK_IN.search(title)) or not NOT_A_VACANCY.search(title)
+
+
 FOLLOW_WORDS = re.compile(r"recruit|career|vacanc|advertis|notification|employment|jobs", re.I)
 
 
@@ -76,14 +91,18 @@ def extract_notices(html, page_url, employer, location, source_name, is_official
         title = clean(a.get_text(" "))
         if len(title) < 12 or NAV_WORDS.match(title) or not NOTICE_WORDS.search(title):
             continue
+        if not is_vacancy(title):
+            continue
         if title_filter and not title_filter(title):
             continue
         href = urljoin(page_url, a["href"])
         if href in seen or href.startswith(("mailto:", "javascript:")):
             continue
         seen.add(href)
-        ctx_el = a.find_parent(["tr", "li", "article", "p", "div"]) or a
-        ctx = clean(ctx_el.get_text(" "))[:1500]
+        ctx_el = a.find_parent(["tr", "li", "p"]) or a
+        ctx = clean(ctx_el.get_text(" "))
+        if len(ctx) > 700:          # parent is a whole table or page section: use the link text only
+            ctx = title
         d, kind = dates.parse_deadline(ctx)
         items.append({
             "title": title[:200],

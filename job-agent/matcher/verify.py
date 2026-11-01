@@ -27,7 +27,7 @@ def page_text(resp):
 
 def fingerprint(text):
     """Dates + eligibility-ish sentences: if these change, we must ask again."""
-    ds = sorted({d.isoformat() for d in dates._dates_in(text or "")})
+    ds = sorted({d.isoformat() for d in dates._dates_in(text or "") if dates.plausible(d)})
     elig = " ".join(sorted(set(re.findall(r"[^.]*(?:eligib|qualif|experience|essential)[^.]*\.", text or "", re.I))))
     return hashlib.sha1((" ".join(ds) + "|" + elig).encode()).hexdigest()[:16], ds
 
