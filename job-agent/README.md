@@ -33,6 +33,17 @@ python3 -m pytest -q        # all tests should pass
 `cv/cv.md`, `config/profile.yaml`, `data/*.csv`, `output/` and `logs/` are in `.gitignore`
 because this repository is public. Keep a copy of them on your own computer.
 
+## Easy way: double-click (Windows)
+
+| Double-click | What happens |
+|---|---|
+| `1 - Search for jobs.bat` | Searches and prepares, then opens the summary. Sends nothing. |
+| `2 - Review and approve.bat` | Shows each prepared item; type a (approve), r (reject) or h (hold). |
+| `3 - Submit approved applications.bat` | Shows a preview of each approved item and asks yes / no. |
+| `Open prepared applications.bat` | Opens the folder with tailored CVs and cover letters, and the ranked list. |
+| `Update the agent.bat` | Downloads the latest version. |
+| `Turn ON weekly search (Monday 9 AM).bat` / `Turn OFF weekly search.bat` | Weekly search only; never submits. |
+
 ## Commands
 
 | Command | What it does |
